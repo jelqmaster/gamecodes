@@ -1,0 +1,75 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+from time import sleep
+from colorama import Fore, init
+
+init()
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+
+def get_codes_escapist(link):
+    try:
+        response = requests.get(link, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        data = soup.find('ul', {'data-injectable':'true'})
+        if data:
+            for index, item in enumerate(data.find_all('li')):
+                code = item.find('strong').text
+                if code:
+                    print(f'[{index+1}] = {Fore.LIGHTGREEN_EX}{code}{Fore.RESET}{item.text.strip().replace(code, "")}')
+    except Exception as e:
+        print(f'An Error Has Occurred: {e}')
+
+def get_codes_gamerant(link):
+    try:
+        response = requests.get(link, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        table_container = soup.find('div', class_='table-container')
+        if table_container:
+            code_container = table_container.find('tbody')
+            if code_container:
+                for index, item in enumerate(code_container.find_all('tr')):
+                    td = item.find('td')
+                    if td:
+                        p = td.find('p')
+                        if p:
+                            code = p.find('strong').text
+                            if code:
+                                print(f'[{index+1}] = {Fore.LIGHTGREEN_EX}{code}{Fore.RESET}: {item.text.strip().replace(code, "").replace("   ", "")}')
+    except Exception as e:
+        print(f'An Error Has Occurred: {e}')
+
+print('[1] = Anime Defenders\n[2] = Arm Wrestle Simulator\n[3] = Pet Catchers\n[4] = Anime Fighters Simulator')
+while True:
+    choice = input('Enter Choice: ')
+    try:
+        choice = int(choice)
+        if choice == 1:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_escapist('https://www.escapistmagazine.com/anime-defenders-codes/')
+            input()
+            break
+        elif choice == 2:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_gamerant('https://gamerant.com/roblox-arm-wrestle-simulator-codes-aws/')
+            input()
+            break
+        elif choice == 3:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_escapist('https://www.escapistmagazine.com/pet-catchers-codes')
+            input()
+            break
+        elif choice == 4:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_escapist('https://www.escapistmagazine.com/anime-fighters-simulator/')
+            input()
+            break
+        else:
+            print(Fore.RED + f'{choice} is an invalid option!' + Fore.RESET)
+    except Exception:
+        print(Fore.RED + f'{choice} is not a number or a valid option!' + Fore.RESET)
