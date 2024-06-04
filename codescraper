@@ -24,7 +24,7 @@ def get_codes_escapist(link):
     except Exception as e:
         print(f'An Error Has Occurred: {e}')
 
-def get_codes_gamerant(link):
+def get_codes_gamerant_v1(link):
     try:
         response = requests.get(link, headers=headers)
         response.raise_for_status()
@@ -44,7 +44,23 @@ def get_codes_gamerant(link):
     except Exception as e:
         print(f'An Error Has Occurred: {e}')
 
-print('[1] = Anime Defenders\n[2] = Arm Wrestle Simulator\n[3] = Pet Catchers\n[4] = Anime Fighters Simulator')
+def get_codes_gamerant_v2(link):
+    try:
+        response = requests.get(link, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        h3_tag = soup.find('h3', id=lambda x: x and 'active' in x or x and 'working' in x)
+        if h3_tag:
+            code_container = h3_tag.find_next_sibling('ul')
+            if code_container:
+                for index, item in enumerate(code_container.find_all('li')):
+                    code = item.find('strong').text
+                    if code:
+                        print(f'[{index+1}] = {Fore.LIGHTGREEN_EX}{code}{Fore.RESET}{item.text.strip().replace(code, "").replace(" -", ":").replace("  ", " ")}')
+    except Exception as e:
+        print(f'An Error Has Occurred: {e}')
+
+print('[1] = Anime Defenders\n[2] = Arm Wrestle Simulator\n[3] = Pet Catchers\n[4] = Anime Fighters Simulator\n[5] = Anime Odyssey Simulator\n[6] = Evade\n[7] = Collect All Pets\n[8] = Ro Ghoul')
 while True:
     choice = input('Enter Choice: ')
     try:
@@ -56,7 +72,7 @@ while True:
             break
         elif choice == 2:
             os.system('cls' if os.name == 'nt' else 'clear')
-            get_codes_gamerant('https://gamerant.com/roblox-arm-wrestle-simulator-codes-aws/')
+            get_codes_gamerant_v1('https://gamerant.com/roblox-arm-wrestle-simulator-codes-aws/')
             input()
             break
         elif choice == 3:
@@ -67,6 +83,26 @@ while True:
         elif choice == 4:
             os.system('cls' if os.name == 'nt' else 'clear')
             get_codes_escapist('https://www.escapistmagazine.com/anime-fighters-simulator/')
+            input()
+            break
+        elif choice == 5:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_gamerant_v2('https://gamerant.com/roblox-anime-odyssey-simulator-codes/')
+            input()
+            break
+        elif choice == 6:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_gamerant_v2('https://gamerant.com/roblox-evade-codes/')
+            input()
+            break
+        elif choice == 7:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_gamerant_v2('https://gamerant.com/roblox-collect-all-pets-codes/')
+            input()
+            break
+        elif choice == 8:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            get_codes_gamerant_v2('https://gamerant.com/roblox-ro-ghoul-codes/')
             input()
             break
         else:
